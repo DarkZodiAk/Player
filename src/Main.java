@@ -3,8 +3,6 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import static java.lang.Math.abs;
-
 public class Main {
 
     public static ArrayList<Playlist> playlists = new ArrayList<>();

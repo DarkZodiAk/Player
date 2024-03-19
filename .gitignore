@@ -27,3 +27,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/Player.iml
+/src/META-INF/
+idea/
