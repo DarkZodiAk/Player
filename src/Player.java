@@ -22,6 +22,7 @@ public class Player {
         System.out.print("Введите описание плейлиста: ");
         description = scanner.nextLine();
         loadedPlaylist = new Playlist(name, description);
+        playingSong = -1;
         System.out.print("Плейлист успешно создан\n");
     }
 
@@ -39,6 +40,7 @@ public class Player {
         }
 
         loadedPlaylist = playlists.get(number - 1);
+        playingSong = -1;
         System.out.println("Плейлист успешно загружен");
     }
 
@@ -117,7 +119,11 @@ public class Player {
         }
 
         loadedPlaylist.removeSong(number - 1);
-        playingSong = playingSong % loadedPlaylist.size();
+        if(loadedPlaylist.size() == 0){
+            playingSong = -1;
+        } else {
+            playingSong = playingSong % loadedPlaylist.size();
+        }
         System.out.println("Песня успешно удалена");
     }
 
@@ -139,7 +145,7 @@ public class Player {
     }
 
     public void nextSong(){
-        if(loadedPlaylist == null) return;
+        if(loadedPlaylist == null || playingSong == -1) return;
         if(loadedPlaylist.size() == 0){
             System.out.println("Плейлист пуст");
             return;
@@ -149,7 +155,7 @@ public class Player {
     }
 
     public void prevSong(){
-        if(loadedPlaylist == null) return;
+        if(loadedPlaylist == null || playingSong == -1) return;
         if(loadedPlaylist.size() == 0){
             System.out.println("Плейлист пуст");
             return;
