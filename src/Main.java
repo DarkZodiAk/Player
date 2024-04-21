@@ -70,22 +70,22 @@ public class Main {
                     player.createPlaylist();
                     break;
                 case 4:
-                    player.loadPlaylist();
+                    player.loadPlaylist(player.inputNumber("Введите номер плейлиста: "));
                     break;
                 case 5:
                     player.savePlaylist();
                     break;
                 case 6:
-                    player.deletePlaylist();
+                    player.deletePlaylist(player.inputNumber("Введите номер плейлиста: "));
                     break;
                 case 7:
                     player.addSong();
                     break;
                 case 8:
-                    player.deleteSong();
+                    player.deleteSong(player.inputNumber("Введите номер песни: "));
                     break;
                 case 9:
-                    player.playSong();
+                    player.playSong(player.inputNumber("Введите номер песни: "));
                     break;
                 case 10:
                     player.prevSong();

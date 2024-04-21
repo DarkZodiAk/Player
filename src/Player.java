@@ -26,13 +26,11 @@ public class Player {
         System.out.print("Плейлист успешно создан\n");
     }
 
-    public void loadPlaylist(){
+    public void loadPlaylist(int number){
         if(playlists.isEmpty()){
             System.out.println("Плейлистов нету");
             return;
         }
-
-        int number = inputNumber("Введите номер плейлиста: ");
 
         if(number < 1 || number > playlists.size()){
             System.out.println("Введено неверное число!");
@@ -58,13 +56,11 @@ public class Player {
         System.out.println("Плейлист успешно сохранен");
     }
 
-    public void deletePlaylist(){
+    public void deletePlaylist(int number){
         if(playlists.isEmpty()){
             System.out.println("Плейлистов нету");
             return;
         }
-
-        int number = inputNumber("Введите номер плейлиста: ");
 
         if(number < 1 || number > playlists.size()){
             System.out.println("Введено неверное число!");
@@ -104,14 +100,12 @@ public class Player {
         System.out.print("Песня успешно добавлена\n");
     }
 
-    public void deleteSong(){
+    public void deleteSong(int number){
         if(loadedPlaylist == null) return;
         if(loadedPlaylist.size() == 0){
             System.out.println("Плейлист пуст");
             return;
         }
-
-        int number = inputNumber("Введите номер песни: ");
 
         if(number < 1 || number > loadedPlaylist.size()){
             System.out.println("Введено неверное число!");
@@ -127,14 +121,12 @@ public class Player {
         System.out.println("Песня успешно удалена");
     }
 
-    public void playSong(){
+    public void playSong(int number){
         if(loadedPlaylist == null) return;
         if(loadedPlaylist.size() == 0){
             System.out.println("Плейлист пуст");
             return;
         }
-
-        int number = inputNumber("Введите номер песни: ");
 
         if(number < 1 || number > loadedPlaylist.size()){
             System.out.println("Введено неверное число!");
