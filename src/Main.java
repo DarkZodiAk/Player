@@ -1,25 +1,20 @@
-import java.io.*;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
 
-    public static ArrayList<Playlist> playlists = new ArrayList<>();
-    public static Playlist loadedPlaylist = null;
-    public static int playingSong = -1;
     public static Scanner scanner = new Scanner(System.in);
-
+    public static Player player = new Player(scanner);
 
     public static void main(String[] args) {
 
         int choice;
 
         do {
-            if(loadedPlaylist != null){
-                System.out.println("Текущий плейлист: " + loadedPlaylist.getName());
-                if(playingSong > -1){
-                    System.out.println("Играет песня: " + loadedPlaylist.getSong(playingSong).getName());
+            if(player.loadedPlaylist != null){
+                System.out.println("Текущий плейлист: " + player.loadedPlaylist.getName());
+                if(player.playingSong > -1){
+                    System.out.println("Играет песня: " + player.loadedPlaylist.getSong(player.playingSong).getName());
                 }
             } else {
                 System.out.println("Плейлист не загружен");
@@ -45,10 +40,10 @@ public class Main {
 
             try{
                 choice = scanner.nextInt();
-                clearConsole();
+                player.clearConsole();
             } catch(InputMismatchException e){
-                clearInput();
-                clearConsole();
+                player.clearInput();
+                player.clearConsole();
                 System.out.println("Введено неверное число!");
                 continue;
             }
@@ -57,52 +52,52 @@ public class Main {
 
             switch(choice){
                 case 1:
-                    if(loadedPlaylist != null){
-                        loadedPlaylist.showSongs();
+                    if(player.loadedPlaylist != null){
+                        player.loadedPlaylist.showSongs();
                     }
                     break;
                 case 2:
-                    if(playlists.isEmpty()){
+                    if(player.playlists.isEmpty()){
                         System.out.println("Плейлистов нету");
                         continue;
                     }
-                    for(int i = 1; i < playlists.size() + 1; i++){
-                        System.out.println(i + " - " + playlists.get(i - 1) +
-                                "\nКоличество песен: " + playlists.get(i - 1).size() + "\n");
+                    for(int i = 1; i < player.playlists.size() + 1; i++){
+                        System.out.println(i + " - " + player.playlists.get(i - 1) +
+                                "\nКоличество песен: " + player.playlists.get(i - 1).size() + "\n");
                     }
                     break;
                 case 3:
-                    createPlaylist();
+                    player.createPlaylist();
                     break;
                 case 4:
-                    loadPlaylist();
+                    player.loadPlaylist();
                     break;
                 case 5:
-                    savePlaylist();
+                    player.savePlaylist();
                     break;
                 case 6:
-                    deletePlaylist();
+                    player.deletePlaylist();
                     break;
                 case 7:
-                    addSong();
+                    player.addSong();
                     break;
                 case 8:
-                    deleteSong();
+                    player.deleteSong();
                     break;
                 case 9:
-                    playSong();
+                    player.playSong();
                     break;
                 case 10:
-                    prevSong();
+                    player.prevSong();
                     break;
                 case 11:
-                    nextSong();
+                    player.nextSong();
                     break;
                 case 12:
-                    exportPlaylists();
+                    player.exportPlaylists();
                     break;
                 case 13:
-                    importPlaylists();
+                    player.importPlaylists();
                     break;
 
                 default:
@@ -110,245 +105,5 @@ public class Main {
                     break;
             }
         } while(true);
-    }
-
-    public static void createPlaylist(){
-        String name, description;
-
-        clearInput();
-        System.out.print("Введите название плейлиста: ");
-        name = scanner.nextLine();
-        System.out.print("Введите описание плейлиста: ");
-        description = scanner.nextLine();
-        loadedPlaylist = new Playlist(name, description);
-        System.out.print("Плейлист успешно создан\n");
-    }
-
-    public static void loadPlaylist(){
-        int number;
-
-        if(playlists.isEmpty()){
-            System.out.println("Плейлистов нету");
-            return;
-        }
-
-        clearInput();
-        System.out.print("Введите номер плейлиста: ");
-        try{
-            number = scanner.nextInt();
-        } catch(InputMismatchException e){
-            clearInput();
-            System.out.println("Введено неверное число!");
-            return;
-        }
-
-        if(number < 1 || number > playlists.size()){
-            System.out.println("Введено неверное число!");
-            return;
-        }
-
-        loadedPlaylist = playlists.get(number - 1);
-        System.out.println("Плейлист успешно загружен");
-    }
-
-    public static void savePlaylist(){
-        if(loadedPlaylist == null) return;
-
-        for(int i = 0; i < playlists.size(); i++){
-            if(loadedPlaylist.getName() == playlists.get(i).getName()){
-                playlists.set(i, loadedPlaylist);
-                System.out.println("Плейлист успешно сохранен");
-                return;
-            }
-        }
-        playlists.add(loadedPlaylist);
-        System.out.println("Плейлист успешно сохранен");
-    }
-
-    public static void deletePlaylist(){
-        int number;
-
-        if(playlists.isEmpty()){
-            System.out.println("Плейлистов нету");
-            return;
-        }
-
-        clearInput();
-        System.out.print("Введите номер плейлиста: ");
-        try{
-            number = scanner.nextInt();
-        } catch(InputMismatchException e){
-            clearInput();
-            System.out.println("Введено неверное число!");
-            return;
-        }
-
-        if(number < 1 || number > playlists.size()){
-            System.out.println("Введено неверное число!");
-            return;
-        }
-
-        playlists.remove(number - 1);
-        System.out.println("Плейлист успешно удален");
-    }
-
-    public static void addSong(){
-        if(loadedPlaylist == null) return;
-
-        String name, artist;
-        int duration;
-
-        clearInput();
-        System.out.print("Введите название песни: ");
-        name = scanner.nextLine();
-
-        System.out.print("Введите имя исполнителя: ");
-        artist = scanner.nextLine();
-
-        do{
-            System.out.print("Введите длительность песни в секундах: ");
-            try{
-                duration = scanner.nextInt();
-            } catch(InputMismatchException e){
-                clearInput();
-                System.out.println("Введено неверное число! Попробуйте еще раз");
-                continue;
-            }
-            break;
-        } while(true);
-
-        loadedPlaylist.addSong(new Song(name, artist, duration));
-        System.out.print("Песня успешно добавлена\n");
-    }
-
-    public static void deleteSong(){
-        if(loadedPlaylist == null) return;
-        if(loadedPlaylist.size() == 0){
-            System.out.println("Плейлист пуст");
-            return;
-        }
-
-        int number;
-
-        clearInput();
-        System.out.print("Введите номер песни: ");
-        try{
-            number = scanner.nextInt();
-        } catch(InputMismatchException e){
-            clearInput();
-            System.out.println("Введено неверное число!");
-            return;
-        }
-
-        if(number < 1 || number > loadedPlaylist.size()){
-            System.out.println("Введено неверное число!");
-            return;
-        }
-
-        loadedPlaylist.removeSong(number - 1);
-        playingSong = playingSong % loadedPlaylist.size();
-        System.out.println("Песня успешно удалена");
-    }
-
-    public static void playSong(){
-        if(loadedPlaylist == null) return;
-        if(loadedPlaylist.size() == 0){
-            System.out.println("Плейлист пуст");
-            return;
-        }
-
-        int number;
-
-        clearInput();
-        System.out.print("Введите номер песни: ");
-        try{
-            number = scanner.nextInt();
-        } catch(InputMismatchException e){
-            clearInput();
-            System.out.println("Введено неверное число!");
-            return;
-        }
-
-        if(number < 1 || number > loadedPlaylist.size()){
-            System.out.println("Введено неверное число!");
-            return;
-        }
-
-        playingSong = number - 1;
-    }
-
-    public static void nextSong(){
-        if(loadedPlaylist == null) return;
-        if(loadedPlaylist.size() == 0){
-            System.out.println("Плейлист пуст");
-            return;
-        }
-
-        playingSong = (playingSong + 1) % loadedPlaylist.size();
-    }
-
-    public static void prevSong(){
-        if(loadedPlaylist == null) return;
-        if(loadedPlaylist.size() == 0){
-            System.out.println("Плейлист пуст");
-            return;
-        }
-
-        playingSong = (playingSong - 1) % loadedPlaylist.size();
-        if(playingSong < 0) playingSong = loadedPlaylist.size() + playingSong;
-    }
-
-    public static void exportPlaylists(){
-        if(playlists.isEmpty()){
-            System.out.println("Плейлистов нету");
-            return;
-        }
-
-        clearInput();
-        System.out.print("Введите имя файла: ");
-        String fileName = scanner.nextLine();
-
-        try {
-            FileOutputStream fileOut = new FileOutputStream(fileName);
-            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-
-            objectOut.writeObject(playlists);
-
-            System.out.println("Плейлисты были сохранены в файл с именем " + fileName);
-            fileOut.close();
-            objectOut.close();
-        }
-        catch (IOException e) {
-            System.out.println("Произошла ошибка во время сохранения в файл");
-        }
-    }
-
-    public static void importPlaylists(){
-        clearInput();
-        System.out.print("Введите имя файла: ");
-        String fileName = scanner.nextLine();
-
-        try {
-            FileInputStream fileIn = new FileInputStream(fileName);
-            ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-
-            playlists = (ArrayList<Playlist>) objectIn.readObject();
-
-            System.out.println("Плейлисты были загружены из файла");
-            objectIn.close();
-            fileIn.close();
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Произошла ошибка во время загрузки из файла");
-        }
-    }
-
-    public static void clearConsole(){
-        for(int i = 0; i < 50; i++) System.out.print("\n");
-    }
-
-    public static void clearInput(){
-        if (scanner.hasNextLine()) {
-            scanner.nextLine();
-        }
     }
 }
